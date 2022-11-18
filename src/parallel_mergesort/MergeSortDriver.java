@@ -1,4 +1,4 @@
-// Java Program to implement merge sort using
+package parallel_mergesort;// Java Program to implement merge sort using
 // multi-threading
 import java.util.Random;
 

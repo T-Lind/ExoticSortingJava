@@ -1,3 +1,5 @@
+package parallel_mergesort;
+
 import java.util.ArrayList;
 
 public class MergeSort{

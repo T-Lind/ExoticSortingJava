@@ -1,9 +1,9 @@
-package rank_sort;
+package counting_sort;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ArrayOperations {
-    public static void randomizeArray(int[] input, int N_ITEMS, int MAX_NUM) {
+    static void randomizeArray(int[] input, int N_ITEMS, int MAX_NUM) {
         for(int i = 0; i < N_ITEMS; i++)
             input[i] = ThreadLocalRandom.current().nextInt(0, MAX_NUM);
     }

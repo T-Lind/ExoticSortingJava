@@ -22,7 +22,7 @@ public class RecursiveQuicksort {
         pool.invoke(mainTask);
     }
 
-    private static class SortTask extends RecursiveAction {
+    public static class SortTask extends RecursiveAction {
         private int[] list;
         private int start;
         private int end;

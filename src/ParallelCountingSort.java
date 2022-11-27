@@ -121,7 +121,7 @@ public class ParallelCountingSort {
         var t3 = System.currentTimeMillis();
 
         System.out.println("SORTING COMPETITION PROGRAM:");
-        System.out.println("-------------------");
+        System.out.println("---------------------------");
         System.out.println("Items sorted: " + N_ITEMS);
         System.out.println("Max value: " + MAX_VAL);
         System.out.println("Initialization took " + (t1 - t0) + " milliseconds.");

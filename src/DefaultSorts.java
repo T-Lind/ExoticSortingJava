@@ -3,16 +3,14 @@ import java.util.Random;
 
 public class DefaultSorts {
     public static void main(String[] args){
-        var random = new Random();
-        int size = 10_000_000;
-        Integer[] list = new Integer[size];
-        for(int i=0; i<size; i++){
-            list[i] = random.nextInt();
-        }
+        int size = 1_000_000;
+        int max_num = 1_000_000;
+        var list = new int[size];
+
+        ArrayOperations.randomizeArray(list, size, max_num);
+
         var list2 = Arrays.copyOf(list, list.length);
 
-        Runtime rt = Runtime.getRuntime();
-        System.out.println(rt.totalMemory());
 
         var before = System.currentTimeMillis();
         Arrays.sort(list);

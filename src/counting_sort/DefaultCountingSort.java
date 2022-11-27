@@ -3,9 +3,9 @@ package counting_sort;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DefaultCountingSort {
-    private static int N_ITEMS = 100_000_000;
+    private static int N_ITEMS = 1_000_000;
 
-    private static int MAX_VAL = 100_000_000;
+    private static int MAX_VAL = 1_000_000;
 
 
     static boolean isSorted(int[] array){
@@ -44,8 +44,6 @@ public class DefaultCountingSort {
         countSort(array, output, count);
         var t1 = System.currentTimeMillis();
 
-        for(int i=100000; i<100010;i++)
-            System.out.print(output[i]+" ");
 
         System.out.println("\nSorting took " + (t1 - t0) + " milliseconds.");
         System.out.println("Array is sorted: "+isSorted(output));

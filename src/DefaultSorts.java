@@ -11,6 +11,8 @@ public class DefaultSorts {
         }
         var list2 = Arrays.copyOf(list, list.length);
 
+        Runtime rt = Runtime.getRuntime();
+        System.out.println(rt.totalMemory());
 
         var before = System.currentTimeMillis();
         Arrays.sort(list);

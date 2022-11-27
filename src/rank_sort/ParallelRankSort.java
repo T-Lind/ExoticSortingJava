@@ -1,52 +1,54 @@
 package rank_sort;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Arrays;
+
+import static rank_sort.ArrayOperations.isSorted;
+import static rank_sort.ArrayOperations.randomizeArray;
 
 class ParallelRankSort {
-	public static void main(String[] args) {
+    private static int N_ITEMS = 1_000_000;
 
-		// Get command line arguments
-		int elemQuantity = 1_000_000;
-		System.out.println("Problem size: " + elemQuantity);
-		int threadNum = 16;
+    private static int MAX_NUM = 1_000_000;
+    private static int N_THREADS = 16;
 
+    private static int[] input, output;
 
-		// Initialize arrays
-		int[] readArray = new int[elemQuantity];
-		int[] resultArray = new int[elemQuantity];
+    private static RankSortThread[] threads;
 
 
-		// Create initial un-sorted array and print it
-		for(int i = 0; i < elemQuantity; i++) {
-			readArray[i] = ThreadLocalRandom.current().nextInt(0, 1_000_000);
-			resultArray[i] = 0;
-		}
+    public static void main(String[] args) throws InterruptedException {
+        var t0 = System.currentTimeMillis();
 
-		// Start timer
-		long start = System.currentTimeMillis();
+        input = new int[N_ITEMS];
+        output = new int[N_ITEMS];
 
-		// Calculate blocks of operation for threads
-		int blockSize = elemQuantity / threadNum;
+        randomizeArray(input, N_ITEMS, MAX_NUM);
 
-		// Start threads
-		ParallelRankThread threads[] = new ParallelRankThread[threadNum];
-		for(int i = 0, j = 0; i < threadNum; i++, j += blockSize) {
-			threads[i] = new ParallelRankThread(readArray, resultArray, threadNum, i);
-			threads[i].start();
-		}
+        threads = new RankSortThread[N_THREADS];
 
-		// Join threads
-		try {
-			for(int i = 0; i < threadNum; i++) {
-				threads[i].join();
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+        var t1 = System.currentTimeMillis();
 
-		// Stop timer
-		long elapsedTimeMillis = System.currentTimeMillis() - start;
-		System.out.println("Duration: " + elapsedTimeMillis + "ms");
+        Arrays.parallelSort(input);
+//        for (int id = 0; id < N_THREADS; id++) {
+//            threads[id] = new RankSortThread(input, output, N_THREADS, id);
+//            threads[id].start();
+//        }
+//
+//        for (int i = 0; i < N_THREADS; i++)
+//            threads[i].join();
 
-	}
+
+        var t2 = System.currentTimeMillis();
+
+        // Printout
+        System.out.println("SORTING COMPETITION:");
+        System.out.println("--------------------");
+        System.out.println("Instantiation time: " + (t1 - t0) + "ms");
+        System.out.println("Sorting time: " + (t2 - t1) + "ms");
+        System.out.println("Total runtime: " + (t2 - t0) + "ms");
+        System.out.print("Comprehensive sorting test output: " + isSorted(input, N_ITEMS)+"\n");
+
+        for(int i=0;i<100;i++)
+            System.out.print(input[i]+" ");
+    }
 }

@@ -1,3 +1,5 @@
+package counting_sort;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DefaultCountingSort {

@@ -1,3 +1,5 @@
+package counting_sort;
+
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -37,10 +39,10 @@ public class ParallelCountingSort {
 
     static void countSort(int[] array, int[] output, int[] count) {
         int i;
-        for (i = 1; i < N_ITEMS; i++)
+        for (i = 1; i <= N_ITEMS; i++)
             count[array[i]]++;
 
-        for (i = 1; i < MAX_VAL; i++)
+        for (i = 1; i <= MAX_VAL - 1; i++)
             count[i] += count[i - 1];
 
         for (i = N_ITEMS; i >= 1; i--) {
@@ -48,6 +50,7 @@ public class ParallelCountingSort {
             count[array[i]]--;
         }
     }
+
 
     static int[] bounds(int id){
         int lowerBound = (int) (N_ITEMS * (float) id / N_THREADS + 1);

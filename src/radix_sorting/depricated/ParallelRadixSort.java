@@ -1,9 +1,10 @@
-package radix_sorting;
+package radix_sorting.depricated;
 
 import java.util.concurrent.CyclicBarrier;
 /**
  * ParallelRadixSort class
  */
+@Deprecated
 public class ParallelRadixSort {
 
     int k;

@@ -1,14 +1,17 @@
-package radix_sorting;
+package radix_sorting.depricated;
 
+
+@Deprecated
 public class Sorting {
-    private static int N_ITEMS = 100_000_000;
+    private static final int N_ITEMS = 100_000_000;
 
     public static void main(String[] args) {
         int min = 302;
         var array = new int[N_ITEMS];
 
         for(int i=0;i<10;i++){
-            ArrayOperations.randomizeArray(array, N_ITEMS, Integer.MAX_VALUE - 1);
+            // NEED TO DO IF RUN IN THE FUTURE
+//            ArrayOperations.randomizeArray(array, N_ITEMS, Integer.MAX_VALUE - 1);
             var sorting = new ParallelRadixSort(array, 4, 8);
             long before = System.currentTimeMillis();
             sorting.radixSort();

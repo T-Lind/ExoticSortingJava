@@ -5,21 +5,21 @@ import static counting_sort.ArrayOperations.isSorted;
 import static counting_sort.ArrayOperations.randomizeArray;
 
 public class ParallelizedCountingSort {
-    private static int N_ITEMS = 10_000_000;
-    private static int MAX_VAL = 10_000_000;
+    private static final int N_ITEMS = 10_000_000;
+    private static final int MAX_VAL = 10_000_000;
 
-    private static int N_THREADS = 10;
+    private static final int N_THREADS = 10;
 
-    private static int[] output;
+    private static int[] array, output;
 
     private static Thread[] threads;
     private static CountSortThread[] sorts;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         threads = new Thread[N_THREADS];
         sorts = new CountSortThread[N_THREADS];
 
-        var array = new int[N_ITEMS];
+        array = new int[N_ITEMS];
         output = new int[N_ITEMS];
 
         randomizeArray(array, N_ITEMS, MAX_VAL);
@@ -42,28 +42,28 @@ public class ParallelizedCountingSort {
                 if (threads[i].isAlive())
                     exited = false;
                 else {
-                    int idx = sorts[i].start;
-                    for (int j = 0; j < sorts[i].size; j++) {
-                        if (idx < N_ITEMS) {
-                            output[idx] = sorts[i].output[j];
-                            idx++;
-                        }
-                    }
+//                    int idx = sorts[i].start;
+//                    for (int j = 0; j < sorts[i].size; j++) {
+//                        if (idx < N_ITEMS) {
+//                            output[idx] = sorts[i].output[j];
+//                            idx++;
+//                        }
+//                    }
                 }
 
         }
 
 
 
-//        int idx = 0;
-//        for(int i=0;i<N_THREADS;i++){
-//            for(int j=0;j<sorts[i].size;j++){
-//                if(idx < N_ITEMS){
-//                    output[idx] = sorts[i].output[j];
-//                    idx++;
-//                }
-//            }
-//        }
+        int idx = 0;
+        for(int i=0;i<N_THREADS;i++){
+            for(int j=0;j<sorts[i].size;j++){
+                if(idx < N_ITEMS){
+                    output[idx] = sorts[i].output[j];
+                    idx++;
+                }
+            }
+        }
 
         var t1 = System.currentTimeMillis();
         System.out.println("Sorting time: " + (t1 - t0) + " milliseconds");

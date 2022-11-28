@@ -3,9 +3,9 @@ package counting_sort;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DefaultCountingSort {
-    private static int N_ITEMS = 10_000_000;
+    private static int N_ITEMS = 100_000_000;
 
-    private static int MAX_VAL = 10_000_000;
+    private static int MAX_VAL = 2_000_000_000;
 
 
     static boolean isSorted(int[] array){

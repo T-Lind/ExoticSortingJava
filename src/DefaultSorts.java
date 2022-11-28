@@ -1,9 +1,9 @@
 import java.util.Arrays;
 
 public class DefaultSorts {
-    public static void main(String[] args){
-        int size = 10_000_000;
-        int max_num = 10_000_000;
+    public static void main(String[] args) {
+        int size = 100_000_000;
+        int max_num = Integer.MAX_VALUE - 1;
         var list = new int[size];
 
         ArrayOperations.randomizeArray(list, size, max_num);
@@ -12,13 +12,13 @@ public class DefaultSorts {
 
 
         var before = System.currentTimeMillis();
-        Arrays.sort(list);
+//        Arrays.sort(list);
         var after = System.currentTimeMillis();
-        System.out.println(after-before+" milliseconds");
+        System.out.println(after - before + " milliseconds");
 
         before = System.currentTimeMillis();
         Arrays.parallelSort(list2);
         after = System.currentTimeMillis();
-        System.out.println(after-before+" milliseconds");
+        System.out.println(after - before + " milliseconds");
     }
 }

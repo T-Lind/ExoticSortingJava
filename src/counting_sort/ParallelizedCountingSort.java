@@ -6,7 +6,7 @@ import static counting_sort.ArrayOperations.randomizeArray;
 
 public class ParallelizedCountingSort {
     private static final int N_ITEMS = 10_000_000;
-    private static final int MAX_VAL = 10_000_000;
+    private static final int MAX_VAL = Integer.MAX_VALUE;
 
     private static final int N_THREADS = 10;
 
@@ -15,7 +15,7 @@ public class ParallelizedCountingSort {
     private static Thread[] threads;
     private static CountSortThread[] sorts;
 
-    public static void main(String[] args) {
+    public static void hideSort() {
         threads = new Thread[N_THREADS];
         sorts = new CountSortThread[N_THREADS];
 

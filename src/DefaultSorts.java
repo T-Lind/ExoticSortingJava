@@ -2,8 +2,8 @@ import java.util.Arrays;
 
 public class DefaultSorts {
     public static void main(String[] args){
-        int size = 1_000_000;
-        int max_num = 1_000_000;
+        int size = 10_000_000;
+        int max_num = 10_000_000;
         var list = new int[size];
 
         ArrayOperations.randomizeArray(list, size, max_num);

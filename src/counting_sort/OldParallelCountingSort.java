@@ -1,9 +1,9 @@
 package counting_sort;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class ParallelCountingSort {
+@Deprecated
+public class OldParallelCountingSort {
     private static int N_ITEMS = 10_000_000;
     private static int N_THREADS = 2;
 

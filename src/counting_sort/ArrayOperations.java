@@ -12,7 +12,7 @@ public class ArrayOperations {
         int nIncorrect = 0;
         int zeroCtr = 0;
         for (int i = 1; i < N_ITEMS; i++) {
-            if (array[i] < array[i - 1] && nIncorrect < 10) {
+            if (array[i] < array[i - 1] && array[i] > 0 && nIncorrect < 10) {
                 System.out.println("Index: " + i + ", values: " + array[i - 1] + " " + array[i]);
                 nIncorrect++;
             }

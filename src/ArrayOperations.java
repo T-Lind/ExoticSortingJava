@@ -13,6 +13,7 @@ public class ArrayOperations {
             if (array[i] < array[i - 1] && nIncorrect < 10) {
                 System.out.println("Index: " + i + ", values: " + array[i - 1] + " " + array[i]);
                 nIncorrect++;
+
             }
             if (array[i] == 0)
                 zeroCtr++;

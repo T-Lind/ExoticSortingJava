@@ -1,19 +1,16 @@
 package counting_sort;
 
-import recursive_quicksort.RecursiveQuicksort;
 
-import java.util.Arrays;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
-
+import static counting_sort.ArrayOperations.isSorted;
 import static counting_sort.ArrayOperations.randomizeArray;
-import static java.lang.Math.floor;
 
-public class NewParallelCountingSort {
-    private static int N_ITEMS = 1_000;
-    private static int MAX_VAL = 1_000;
+public class ParallelizedCountingSort {
+    private static int N_ITEMS = 10_000_000;
+    private static int MAX_VAL = 10_000_000;
 
-    private static int N_THREADS = 4;
+    private static int N_THREADS = 10;
+
+    private static int[] output;
 
     private static Thread[] threads;
     private static CountSortThread[] sorts;
@@ -23,7 +20,7 @@ public class NewParallelCountingSort {
         sorts = new CountSortThread[N_THREADS];
 
         var array = new int[N_ITEMS];
-        var output = new int[N_ITEMS];
+        output = new int[N_ITEMS];
 
         randomizeArray(array, N_ITEMS, MAX_VAL);
 
@@ -40,25 +37,47 @@ public class NewParallelCountingSort {
         boolean exited = false;
         while (!exited) {
             exited = true;
-            for (int i = 0; i < N_THREADS; i++)
+            int i;
+            for (i = 0; i < N_THREADS; i++)
                 if (threads[i].isAlive())
                     exited = false;
+                else {
+                    int idx = sorts[i].start;
+                    for (int j = 0; j < sorts[i].size; j++) {
+                        if (idx < N_ITEMS) {
+                            output[idx] = sorts[i].output[j];
+                            idx++;
+                        }
+                    }
+                }
+
         }
 
-        int appendingThread = 0;
-        for (int i = 0; i < N_ITEMS; i++) {
-            output[i] = sorts[appendingThread].output[i - sorts[appendingThread].start];
-        }
 
+
+//        int idx = 0;
+//        for(int i=0;i<N_THREADS;i++){
+//            for(int j=0;j<sorts[i].size;j++){
+//                if(idx < N_ITEMS){
+//                    output[idx] = sorts[i].output[j];
+//                    idx++;
+//                }
+//            }
+//        }
 
         var t1 = System.currentTimeMillis();
         System.out.println("Sorting time: " + (t1 - t0) + " milliseconds");
-
-        for (int i = 0; i < 10; i++)
-            System.out.println(sorts[0].output[i] + " ");
+        System.out.println("Comprehensive array check returned " + isSorted(output, N_ITEMS));
     }
 
 
+    /**
+     * Perform a count sort an  array, given a reference to the output array and count array, and the size of the array
+     * @param array the array to be sorted
+     * @param output the array to sort into
+     * @param count the arrray to count into
+     * @param size the size of the array
+     */
     private static void countSort(int[] array, int[] output, int[] count, int size) {
         int i;
         for (i = 1; i <= size; i++)
@@ -74,13 +93,18 @@ public class NewParallelCountingSort {
     }
 
 
+    /**
+     * Thread object that runs the sorting algorithms
+     */
     private static class CountSortThread implements Runnable {
         public int[] array, output, count;
         private int size, width;
 
-        public int start, end;
+        public int start, end, id;
 
         public CountSortThread(int id, int[] input) { // id is 1-4 incl.
+            this.id = id;
+
             width = MAX_VAL / N_THREADS;
             size = 0;
 
@@ -104,9 +128,16 @@ public class NewParallelCountingSort {
             }
         }
 
+        /**
+         * Execute the sort on the sub-section of the array given
+         */
         @Override
         public void run() {
             countSort(array, output, count, size);
+//            for (int j = start; j < start + size; j++)
+//                if(j < N_ITEMS)
+//                    ParallelizedCountingSort.output[j] = output[j - start];
+
         }
     }
 }

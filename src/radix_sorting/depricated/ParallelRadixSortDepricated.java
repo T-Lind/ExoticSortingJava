@@ -5,7 +5,7 @@ import java.util.concurrent.CyclicBarrier;
  * ParallelRadixSort class
  */
 @Deprecated
-public class ParallelRadixSort {
+public class ParallelRadixSortDepricated {
 
     int k;
     int maxValue;
@@ -25,7 +25,7 @@ public class ParallelRadixSort {
      * @param k - number of threads to be used
      * @param useBits - number of bits to use
      */
-    public ParallelRadixSort(int[] a, int k, int useBits) {
+    public ParallelRadixSortDepricated(int[] a, int k, int useBits) {
         this.a = a;
         this.b = new int[a.length];
         this.k = k;

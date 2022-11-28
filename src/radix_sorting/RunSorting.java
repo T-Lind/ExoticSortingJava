@@ -1,16 +1,12 @@
 package radix_sorting;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class RunSorting {
     private static final int N_ITEMS = 1_000_000;
     private static final short N_TRIALS = 4;
-
     private static final short N_THREADS = 4;
     private static final short USE_BITS = 12;
 
@@ -39,7 +35,7 @@ public class RunSorting {
         var rt = Runtime.getRuntime();
         fileWriter.write("Machine statistics:");
         fileWriter.newLine();
-        fileWriter.write("Max memory: " + rt.maxMemory() / MB + "mb Available processors: " + rt.availableProcessors());
+        fileWriter.write("Max memory: " + rt.maxMemory() / MB + "MB, Available processors: " + rt.availableProcessors());
         fileWriter.newLine();
         fileWriter.newLine();
 
@@ -47,13 +43,13 @@ public class RunSorting {
         for (int i = 0; i < N_TRIALS; i++) {
             ArrayOperations.randomizeArray(array, N_ITEMS, Integer.MAX_VALUE - 1);
             // Instantiate the sorting algorithm. Creates some int variables but nothing too large, sorting runs on .radixSort()
-            var sorting = new ParallelRadixSortUpgraded(array, N_THREADS, USE_BITS, N_ITEMS);
+            var sorting = new ParallelRadixSort(array, N_THREADS, USE_BITS, N_ITEMS);
 
             // Run the sorting algorithm
             var before = System.currentTimeMillis();
             sorting.radixSort();
             var after = System.currentTimeMillis();
-s
+
             times[i] = (short) (after - before);
 
             // Write the run's data right now
@@ -64,7 +60,7 @@ s
         double average = avg(times);
 
         // Write the min and average to the file
-        fileWriter.write("Minimum time of " + min + "ms, average time of: " + average+"ms");
+        fileWriter.write("Minimum time of " + min + "ms, average time of: " + average + "ms");
 
         // Telemetry printout
         System.out.println("Minimum time of " + min + "ms");

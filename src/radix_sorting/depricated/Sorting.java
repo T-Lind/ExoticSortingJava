@@ -12,7 +12,7 @@ public class Sorting {
         for(int i=0;i<10;i++){
             // NEED TO DO IF RUN IN THE FUTURE
 //            ArrayOperations.randomizeArray(array, N_ITEMS, Integer.MAX_VALUE - 1);
-            var sorting = new ParallelRadixSort(array, 4, 8);
+            var sorting = new ParallelRadixSortDepricated(array, 4, 8);
             long before = System.currentTimeMillis();
             sorting.radixSort();
             long after = System.currentTimeMillis();

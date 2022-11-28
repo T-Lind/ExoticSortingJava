@@ -2,7 +2,7 @@ package radix_sorting;
 
 import java.util.concurrent.CyclicBarrier;
 
-public class ParallelRadixSortUpgraded {
+public class ParallelRadixSort {
 
     private final int N_THREADS, sizeOfSegment, remainder, USE_BITS;
     private final int[] array, arrayCopy;
@@ -11,12 +11,12 @@ public class ParallelRadixSortUpgraded {
     private int start;
 
 
-    public ParallelRadixSortUpgraded(int[] a, int N_THREADS, int USE_BITS, int N_ITEMS) {
+    public ParallelRadixSort(int[] a, int N_THREADS, int USE_BITS, int N_ITEMS) {
         this.array = a;
+        arrayCopy = new int[N_ITEMS];
         this.N_THREADS = N_THREADS;
         this.USE_BITS = USE_BITS;
 
-        arrayCopy = new int[N_ITEMS];
         countList = new int[N_THREADS][];
         digPointList = new int[N_THREADS][];
 
@@ -84,46 +84,7 @@ public class ParallelRadixSortUpgraded {
          */
         public void run() {
             int maxValue = Integer.MAX_VALUE - 1;
-            int[] digLen = getDigitsLength(maxValue);
-            int shift = 0;
 
-            for (int j : digLen) {
-                int mask = (1 << j) - 1;
-
-                // Count digit values in a[]
-                int[] count = getCount(mask, array, shift);
-                sync(cb2);
-
-                // Sums up accumulated values
-                sumCount(count);
-                sync(cb2);
-
-                // Move numbers form a[] to b[]
-                moveNumbers(digPointer, shift, mask);
-                sync(cb2);
-
-                int[] temp = array;
-                array = arrayCopy;
-                arrayCopy = temp;
-                shift += j;
-            }
-
-            System.arraycopy(array, start, arrayCopy, start, end - start);
-            sync(cb1);
-        }
-
-
-        // Move numbers form a[] to b[]
-        private void moveNumbers(int[] digPointer, int shift, int mask) {
-            for (int index = start; index < end; index++) {
-                int m = digPointer[(array[index] >>> shift) & mask]++;
-                arrayCopy[m] = array[index];
-            }
-        }
-
-
-        // Get digit length of maxValue
-        private int[] getDigitsLength(int maxValue) {
             int maxBits = 0;
             while (maxValue >= 1L << maxBits) {
                 maxBits += 1;
@@ -139,35 +100,51 @@ public class ParallelRadixSortUpgraded {
             int index = digLen.length - 1;
             digLen[index] = bits + rest;
 
-            return digLen;
-        }
 
+            int shift = 0;
 
-        /* Count digit values in a[] */
-        private int[] getCount(int mask, int[] a, int shift) {
-            int length = mask + 1;
-            int[] count = new int[length];
+            for (int j : digLen) {
+                int mask = (1 << j) - 1;
 
-            for (int i = start; i < end; i++) {
-                count[a[i] >>> shift & mask]++;
-            }
+                int length = mask + 1;
+                int[] count = new int[length];
 
-            countList[id] = count;
-            digPointer = new int[count.length];
-            digPointList[id] = digPointer;
-            return count;
-        }
-
-
-        /* Sums up accumulated values in countList */
-        private void sumCount(int[] count) {
-            int sum = 0;
-            for (int i = 0; i < count.length; i++) {
-                for (int j = 0; j < countList.length; j++) {
-                    digPointList[j][i] = sum;
-                    sum += countList[j][i];
+                for (int i = start; i < end; i++) {
+                    count[array[i] >>> shift & mask]++;
                 }
+
+                countList[id] = count;
+                digPointer = new int[count.length];
+                digPointList[id] = digPointer;
+
+                sync(cb2);
+
+                // Sums up accumulated values
+                int sum = 0;
+                for (int i = 0; i < count.length; i++) {
+                    for (int k = 0; k < countList.length; k++) {
+                        digPointList[k][i] = sum;
+                        sum += countList[k][i];
+                    }
+                }
+                sync(cb2);
+
+                // Move numbers form a[] to b[]
+                for (int idx = start; idx < end; idx++) {
+                    int m = digPointer[(array[idx] >>> shift) & mask]++;
+                    arrayCopy[m] = array[idx];
+                }
+
+                sync(cb2);
+
+                int[] temp = array;
+                array = arrayCopy;
+                arrayCopy = temp;
+                shift += j;
             }
+
+            System.arraycopy(array, start, arrayCopy, start, end - start);
+            sync(cb1);
         }
     }
 }

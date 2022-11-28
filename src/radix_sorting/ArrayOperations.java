@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ArrayOperations {
     static void randomizeArray(int[] input, int N_ITEMS, int MAX_NUM) {
-        for(int i = 0; i < N_ITEMS; i++)
+        for (int i = 0; i < N_ITEMS; i++)
             input[i] = ThreadLocalRandom.current().nextInt(0, MAX_NUM);
     }
 
@@ -12,7 +12,7 @@ public class ArrayOperations {
         int nIncorrect = 0;
         int zeroCtr = 0;
         for (int i = 1; i < N_ITEMS; i++) {
-            if (array[i] < array[i - 1] && nIncorrect < 10) {
+            if (array[i] < array[i - 1]) {
                 System.out.println("Index: " + i + ", values: " + array[i - 1] + " " + array[i]);
                 nIncorrect++;
 

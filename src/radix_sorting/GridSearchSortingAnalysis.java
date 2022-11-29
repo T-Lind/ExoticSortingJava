@@ -6,14 +6,16 @@ import java.io.IOException;
 
 public class GridSearchSortingAnalysis {
     private static final int N_ITEMS = 10_000_000;
+
+    /**
+     * Number of trials used when analyzing a config of bits used and threads used
+     */
     private static final char N_TRIALS = 10;
 
 
-    private static final char MIN_N_THREADS = 5;
-    private static final char MAX_N_THREADS = 14;
-
-    private static final char MIN_USE_BITS = 4;
-    private static final char MAX_USE_BITS = 10;
+    // Bounds of specifications that will be analyzed, inclusive on both ends
+    private static final char MIN_N_THREADS = 5, MAX_N_THREADS = 14;
+    private static final char MIN_USE_BITS = 4, MAX_USE_BITS = 10;
 
     /*
         RECORD DATA:
@@ -37,21 +39,17 @@ public class GridSearchSortingAnalysis {
 
     public static void main(String[] args) throws IOException {
 
-
+        // Create a new file labeled with the time since the epoch in ms
         var fstream = new FileWriter("C:\\Users\\zenith\\IdeaProjects\\Sorting\\src\\radix_sorting\\data\\gridsearch_run_" + System.currentTimeMillis() + ".txt");
         var fileWriter = new BufferedWriter(fstream);
 
-        // Label the processor statistics in a new file that's created with the name as the current time in milliseconds
-        final var MB = 1024 * 1024;
-        var rt = Runtime.getRuntime();
-        fileWriter.write("Machine statistics:");
-        fileWriter.newLine();
-        fileWriter.write("Max memory: " + rt.maxMemory() / MB + "MB, Available processors: " + rt.availableProcessors());
-        fileWriter.newLine();
-        fileWriter.newLine();
+        // Label the processor statistics the new file
+        UtilOperations.writeMachineStatistics(fileWriter);
 
+        // Store data pertaining to the average, min, st. dev of the current run and threads/bits used to achieve it
         double[] data = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, 0, 0};
 
+        // Loop through every combo of threads and bits given through the constants specified
         for (short threads = MIN_N_THREADS; threads <= MAX_N_THREADS; threads++) {
             for (short bits = MIN_USE_BITS; bits <= MAX_USE_BITS; bits++) {
                 var times = averageOfRuns(threads, bits);
@@ -59,6 +57,8 @@ public class GridSearchSortingAnalysis {
                 var minimum = min(times);
                 var stDev = standardDeviation(times);
 
+                // If this run is the new best, write data to the array and print it/write to file
+                // Measuring best by the average across N_TRIALS of runs in this case
                 if (average < data[0]) {
                     data[0] = average;
                     data[1] = minimum;
@@ -66,32 +66,38 @@ public class GridSearchSortingAnalysis {
                     data[3] = threads;
                     data[4] = bits;
 
-                    String ret_str = "Items sorted: " + N_ITEMS + ", Threads: " + threads + ", Bits used: " + bits + ", run average: " + average + "ms, st. dev: " + stDev + "ms, min: " + minimum + "ms";
-                    System.out.println(ret_str);
-
-                    fileWriter.write(ret_str);
+                    String writeString = "Items sorted: " + N_ITEMS + ", Threads: " + threads + ", Bits used: " + bits + ", run average: " + average + "ms, st. dev: " + stDev + "ms, min: " + minimum + "ms";
+                    System.out.println(writeString);
+                    fileWriter.write(writeString);
                     fileWriter.newLine();
                 }
                 System.out.println("Iteration complete");
             }
         }
 
-        String ret_str = "Best Case: Threads: " + data[3] + ", Bits used: " + data[4] + ", run average: " + data[0] + "ms, st. dev: " + data[2] + "ms, min: " + data[1] + "ms";
-        System.out.println(ret_str);
-
-        fileWriter.write(ret_str);
+        // Print telemetry on the best configuration of threads / bits used and the timing data from it
+        String writeString = "Best configuration: Threads: " + data[3] + ", Bits used: " + data[4] + ", run average: " + data[0] + "ms, st. dev: " + data[2] + "ms, min: " + data[1] + "ms";
+        System.out.println(writeString);
+        fileWriter.write(writeString);
         fileWriter.newLine();
 
         fileWriter.close();
     }
 
+    /**
+     * Calculates the average, min, and st. dev of sorting based on the given threads and use bits value
+     *
+     * @param nThreads number of threads to test with
+     * @param useBits  number of bits to apply before remainder
+     * @return an array of the average, min, and st. dev values
+     */
     private static short[] averageOfRuns(int nThreads, short useBits) {
         var times = new short[N_TRIALS];
         var array = new int[N_ITEMS];
 
         // Run N_TRIALS of the sorting algorithm, averaging and finding the min to write to the file and print to the screen
         for (int i = 0; i < N_TRIALS; i++) {
-            ArrayOperations.randomizeArray(array, N_ITEMS, Integer.MAX_VALUE - 1);
+            UtilOperations.randomizeArray(array, Integer.MAX_VALUE - 1);
             // Instantiate the sorting algorithm. Creates some int variables but nothing too large, sorting runs on .radixSort()
             var sorting = new ParallelRadixSort(array, nThreads, useBits, N_ITEMS);
 
@@ -106,6 +112,10 @@ public class GridSearchSortingAnalysis {
 
         return times;
     }
+
+    /*
+        Various helper functions to calculate the min, avg, and st. dev from an array of shorts
+     */
 
     private static int min(short... values) {
         int min = values[0];

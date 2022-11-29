@@ -51,7 +51,7 @@ public class BasicSortingAnalysis {
 
         // Run N_TRIALS of the sorting algorithm, averaging and finding the min to write to the file and print to the screen
         for (int i = 0; i < N_TRIALS; i++) {
-            ArrayOperations.randomizeArray(array, N_ITEMS, Integer.MAX_VALUE - 1);
+            UtilOperations.randomizeArray(array, Integer.MAX_VALUE - 1);
             // Instantiate the sorting algorithm. Creates some int variables but nothing too large, sorting runs on .radixSort()
             var sorting = new ParallelRadixSort(array, N_THREADS, USE_BITS, N_ITEMS);
 
@@ -77,7 +77,7 @@ public class BasicSortingAnalysis {
         System.out.println("Minimum time of " + min + "ms");
         System.out.println("Average time of " + average + "ms");
         System.out.println("Standard deviation of " + stDev + "ms");
-        System.out.println("Comprehensive sorting check returned: " + ArrayOperations.isSorted(array, N_ITEMS));
+        System.out.println("Comprehensive sorting check returned: " + UtilOperations.isSorted(array, N_ITEMS, fileWriter));
         fileWriter.close();
     }
 

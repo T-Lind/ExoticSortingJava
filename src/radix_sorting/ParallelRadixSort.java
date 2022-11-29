@@ -15,17 +15,19 @@ public class ParallelRadixSort {
     /**
      * Arrays containing the sorting data
      */
-    private final int[] array, arrayCopy;
+    private final int[] array;
+    private final int[] arrayCopy;
 
     /**
      * Lists containing the count
      */
-    private final int[][] countList, digitPointList;
+    private final int[][] countList;
+    private final int[][]digitPointList;
 
     /**
      * Contains the objects sorting the array
      */
-    private Thread[] threads;
+    private final Thread[] threads;
 
     /**
      * Allows a set of threads to all wait for each other to reach a common barrier point
@@ -48,12 +50,10 @@ public class ParallelRadixSort {
      */
     public ParallelRadixSort(int[] array, int N_THREADS, int USE_BITS, int N_ITEMS) {
         this.array = array;
-        arrayCopy = new int[N_ITEMS];
         this.N_THREADS = N_THREADS;
         this.USE_BITS = USE_BITS;
+        arrayCopy = new int[N_ITEMS];
 
-        countList = new int[N_THREADS][];
-        digitPointList = new int[N_THREADS][];
 
         cb1 = new CyclicBarrier(N_THREADS + 1);
         cb2 = new CyclicBarrier(N_THREADS);
@@ -64,20 +64,10 @@ public class ParallelRadixSort {
 
         threads = new Thread[REMAINDER + (N_THREADS - REMAINDER)];
 
-        char idx = 0;
-        for (int i = 0; i < REMAINDER; i++) {
-            int end = start + SIZE_OF_SEGMENT + 1;
-            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
-            start += SIZE_OF_SEGMENT + 1;
-            idx++;
-        }
+        countList = new int[N_THREADS][];
+        digitPointList = new int[N_THREADS][];
 
-        for (int j = REMAINDER; j < N_THREADS; j++) {
-            int end = start + SIZE_OF_SEGMENT;
-            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
-            start += SIZE_OF_SEGMENT;
-            idx++;
-        }
+        initVariables();
     }
 
 
@@ -87,6 +77,7 @@ public class ParallelRadixSort {
     public void radixSort() {
         for (Thread thread : threads) thread.start();
 
+        // Synchronize threads when done - wait for N_THREADS + 1 (aka all threads, including main)
         sync(cb1);
     }
 
@@ -150,8 +141,7 @@ public class ParallelRadixSort {
             // How bit shift operator works: takes binary number and moves the number
             // second argument left. >> does the reverse, but still uses the second arg.
             int maxBits = 0;
-            while (maxValue >= 1L << maxBits)
-                maxBits += 1;
+            while (maxValue >= 1L << maxBits) maxBits += 1;
 
             // Determine the number of digits to analyze
             int digits = Math.max(1, maxBits / USE_BITS);
@@ -207,7 +197,7 @@ public class ParallelRadixSort {
 
                 sync(cb2);
 
-                int[] temp = array;
+                var temp = array;
                 array = arrayCopy;
                 arrayCopy = temp;
                 shift += j;
@@ -215,6 +205,23 @@ public class ParallelRadixSort {
 
             System.arraycopy(array, start, arrayCopy, start, end - start);
             sync(cb1);
+        }
+    }
+
+    private void initVariables() {
+        char idx = 0;
+        for (int i = 0; i < REMAINDER; i++) {
+            int end = start + SIZE_OF_SEGMENT + 1;
+            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT + 1;
+            idx++;
+        }
+
+        for (int j = REMAINDER; j < N_THREADS; j++) {
+            int end = start + SIZE_OF_SEGMENT;
+            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT;
+            idx++;
         }
     }
 }

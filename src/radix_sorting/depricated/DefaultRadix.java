@@ -1,9 +1,10 @@
-package radix_sorting;// Radix sort Java implementation
+package radix_sorting.depricated;// Radix sort Java implementation
 
 import java.util.*;
 
-import static radix_sorting.ArrayOperations.randomizeArray;
+import static radix_sorting.depricated.ArrayOperations.randomizeArray;
 
+@Deprecated
 class DefaultRadix {
 	private static int N_ITEMS = 100_000_000;
 	private static int MAX_VALUE = Integer.MAX_VALUE - 1;

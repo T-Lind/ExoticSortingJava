@@ -4,15 +4,17 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class RunSorting {
+public class BasicSortingAnalysis {
     private static final int N_ITEMS = 1_000_000;
-    private static final short N_TRIALS = 4;
+    private static final short N_TRIALS = 10;
     private static final short N_THREADS = 4;
-    private static final short USE_BITS = 12;
+    private static final short USE_BITS = 6;
 
     /*
         RECORD DATA:
+        ------------
 
+        SCHOOL COMPUTER:
         ------
         BEST TIME 100M = 269ms;
         BEST TIME 1B = 2783ms;
@@ -21,6 +23,15 @@ public class RunSorting {
 
         USE 12 THREADS 1B
         USE 4 THREADS 100M
+
+        HOME COMPUTER (SLOWER):
+        ------
+        BEST TIME 1M: 14ms
+        BEST TIME 10M: 120ms
+
+        USE 8 THREADS 10M
+        USE 8 THREADS 1M
+        USE BITS = 6
     */
 
     public static void main(String[] args) throws IOException {
@@ -58,14 +69,16 @@ public class RunSorting {
         }
         double min = min(times);
         double average = avg(times);
+        double stDev = standardDeviation(times);
 
         // Write the min and average to the file
-        fileWriter.write("Minimum time of " + min + "ms, average time of: " + average + "ms");
+        fileWriter.write("Minimum time of " + min + "ms, average time of: " + average + "ms, st. dev: "+stDev);
 
         // Telemetry printout
         System.out.println("Minimum time of " + min + "ms");
         System.out.println("Average time of " + average + "ms");
-        System.out.println("Thorough sorting check returned: " + ArrayOperations.isSorted(array, N_ITEMS));
+        System.out.println("Standard deviation of " + stDev + "ms");
+        System.out.println("Comprehensive sorting check returned: " + ArrayOperations.isSorted(array, N_ITEMS));
         fileWriter.close();
     }
 
@@ -82,5 +95,13 @@ public class RunSorting {
         for (short item : values)
             sum += item;
         return sum / (double) values.length;
+    }
+
+    public static double standardDeviation(short... values) {
+        double summation = 0;
+        double mean = avg(values);
+        for(short item : values)
+            summation += (item - mean)*(item - mean);
+        return Math.sqrt(summation/(values.length));
     }
 }

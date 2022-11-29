@@ -1,0 +1,14 @@
+Machine statistics:
+Max memory: 7168MB, Available processors: 4
+
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 276ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 70ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 72ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 63ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 62ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 57ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 68ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 93ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 61ms
+Items sorted: 1000000 Threads: 4 Bits: 8 Trials: 10 Time: 58ms
+Minimum time of 57.0ms, average time of: 88.0ms

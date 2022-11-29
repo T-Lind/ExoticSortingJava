@@ -1,0 +1,11 @@
+Machine statistics:
+Max memory: 2024MB, Available processors: 4
+
+Items sorted: 1000000 Threads: 3, Bits used: 4, run average: 49.4ms, st. dev: 58.2480900974444ms, min: 26ms
+Items sorted: 1000000 Threads: 3, Bits used: 5, run average: 30.8ms, st. dev: 14.295453822806747ms, min: 20ms
+Items sorted: 1000000 Threads: 3, Bits used: 6, run average: 21.0ms, st. dev: 1.8439088914585775ms, min: 19ms
+Items sorted: 1000000 Threads: 6, Bits used: 6, run average: 17.6ms, st. dev: 4.737087712930805ms, min: 13ms
+Items sorted: 1000000 Threads: 7, Bits used: 5, run average: 17.2ms, st. dev: 6.193545026880809ms, min: 6ms
+Items sorted: 1000000 Threads: 7, Bits used: 6, run average: 16.4ms, st. dev: 1.7435595774162698ms, min: 15ms
+Items sorted: 1000000 Threads: 14, Bits used: 6, run average: 15.5ms, st. dev: 6.360031446463139ms, min: 6ms
+Best Case: Threads: 14.0, Bits used: 6.0, run average: 15.5ms, st. dev: 6.360031446463139ms, min: 6.0ms

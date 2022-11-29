@@ -2,55 +2,98 @@ package radix_sorting;
 
 import java.util.concurrent.CyclicBarrier;
 
+/**
+ * Hyper-optimized class to sort a static array in parallel through a radix sort
+ */
 public class ParallelRadixSort {
 
-    private final int N_THREADS, sizeOfSegment, remainder, USE_BITS;
+    /**
+     * Variables containing various constants used throughout the sort
+     */
+    private final int N_THREADS, SIZE_OF_SEGMENT, REMAINDER, USE_BITS;
+
+    /**
+     * Arrays containing the sorting data
+     */
     private final int[] array, arrayCopy;
-    private final int[][] countList, digPointList;
+
+    /**
+     * Lists containing the count
+     */
+    private final int[][] countList, digitPointList;
+
+    /**
+     * Contains the objects sorting the array
+     */
+    private Thread[] threads;
+
+    /**
+     * Allows a set of threads to all wait for each other to reach a common barrier point
+     */
     private final CyclicBarrier cb1, cb2;
+
+    /**
+     * Index for threads to start sorting at
+     */
     private int start;
 
 
-    public ParallelRadixSort(int[] a, int N_THREADS, int USE_BITS, int N_ITEMS) {
-        this.array = a;
+    /**
+     * Create the object used to sort the given array
+     *
+     * @param array     the array to sort IN PLACE
+     * @param N_THREADS the number of threads to use when sorting
+     * @param USE_BITS  number of bits to initially sort by (excess goes to remainder)
+     * @param N_ITEMS   number of items to sort to remove array.length call
+     */
+    public ParallelRadixSort(int[] array, int N_THREADS, int USE_BITS, int N_ITEMS) {
+        this.array = array;
         arrayCopy = new int[N_ITEMS];
         this.N_THREADS = N_THREADS;
         this.USE_BITS = USE_BITS;
 
         countList = new int[N_THREADS][];
-        digPointList = new int[N_THREADS][];
+        digitPointList = new int[N_THREADS][];
 
         cb1 = new CyclicBarrier(N_THREADS + 1);
         cb2 = new CyclicBarrier(N_THREADS);
 
-        sizeOfSegment = N_ITEMS / N_THREADS;
-        remainder = N_ITEMS % N_THREADS;
+        SIZE_OF_SEGMENT = N_ITEMS / N_THREADS;
+        REMAINDER = N_ITEMS % N_THREADS;
         start = 0;
+
+        threads = new Thread[REMAINDER + (N_THREADS - REMAINDER)];
+
+        char idx = 0;
+        for (int i = 0; i < REMAINDER; i++) {
+            int end = start + SIZE_OF_SEGMENT + 1;
+            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT + 1;
+            idx++;
+        }
+
+        for (int j = REMAINDER; j < N_THREADS; j++) {
+            int end = start + SIZE_OF_SEGMENT;
+            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT;
+            idx++;
+        }
     }
 
 
     /**
-     * Starts k number of threads
-     * Give each thread a segment to sort
+     * Sort the given array through a parallel radix sort
      */
     public void radixSort() {
-        for (int i = 0; i < remainder; i++) {
-            int end = start + sizeOfSegment + 1;
-            new Thread(new Worker(i, array, arrayCopy, start, end)).start();
-            start += sizeOfSegment + 1;
-        }
-
-        for (int j = remainder; j < N_THREADS; j++) {
-            int end = start + sizeOfSegment;
-            new Thread(new Worker(j, array, arrayCopy, start, end)).start();
-            start += sizeOfSegment;
-        }
+        for (Thread thread : threads) thread.start();
 
         sync(cb1);
     }
 
 
-    /* Synchronize threads using a Cyclic Barrier */
+    /**
+     * Synchronize threads using a Cyclic Barrier - waits for all threads to reach a point and then continues
+     */
     public void sync(CyclicBarrier cb) {
         try {
             cb.await();
@@ -60,62 +103,89 @@ public class ParallelRadixSort {
     }
 
 
-    // Inner Worker class for doing the parallelization
+    /**
+     * Class that sorts parts of the array in the thread assigned
+     */
     private class Worker implements Runnable {
-
+        /**
+         * Constant variables that contain which number of thread it is, and sorting bounds
+         */
         private final int id, start, end;
-        private int[] array, arrayCopy, digPointer;
 
-        /* Constructor - Worker class*/
-        private Worker(int id, int[] a, int[] b, int start, int end) {
+        /**
+         * Arrays used in the sorting process
+         */
+        private int[] array, arrayCopy, digitPointer;
+
+        /**
+         * Constructs the worker class on thread initialization
+         *
+         * @param id        the index of the thread this worker is in
+         * @param array     the array to be sorted
+         * @param arrayCopy the modified copy of the array to be sorted
+         * @param start     the start index to sort at
+         * @param end       the end index to sort at
+         */
+        private Worker(int id, int[] array, int[] arrayCopy, int start, int end) {
             this.id = id;
-            this.array = a;
-            this.arrayCopy = b;
+            this.array = array;
+            this.arrayCopy = arrayCopy;
             this.start = start;
             this.end = end;
         }
 
 
         /**
-         * 1. Finds maxValue in a[]
-         * 2. Count digit values in a[]
-         * 3. Sums up accumulated values
-         * 4. Move numbers form a[] to b[]
+         * "Meat" of the radix sort:
+         * <p>
+         * Algorithm used:
+         * 1. Count digit values in array[]
+         * 2. Sums up accumulated values
+         * 3. Move numbers form array[] to arrayCopy[]
          */
         public void run() {
+            // Establish the maximum value used in the array
             int maxValue = Integer.MAX_VALUE - 1;
 
+            // How bit shift operator works: takes binary number and moves the number
+            // second argument left. >> does the reverse, but still uses the second arg.
             int maxBits = 0;
-            while (maxValue >= 1L << maxBits) {
+            while (maxValue >= 1L << maxBits)
                 maxBits += 1;
-            }
+
+            // Determine the number of digits to analyze
             int digits = Math.max(1, maxBits / USE_BITS);
-            int[] digLen = new int[digits];
-            int rest = maxBits % USE_BITS;
+            int[] digitLen = new int[digits];
+
+            // Splits the number into two parts
+            int remainder = maxBits % USE_BITS;
             int bits = maxBits / digits;
 
-            for (int i = 0; i < digLen.length - 1; i++) {
-                digLen[i] = bits;
-            }
-            int index = digLen.length - 1;
-            digLen[index] = bits + rest;
+            int index = digitLen.length - 1;
+            // Loop through the digit array to assign the non-remainder value to digitLen
+            for (int i = 0; i < index; i++)
+                digitLen[i] = bits;
+
+            // Assign to the end the array the sum of the dividend and remainder
+            digitLen[index] = bits + remainder;
 
 
             int shift = 0;
 
-            for (int j : digLen) {
-                int mask = (1 << j) - 1;
+            for (int j : digitLen) {
+                // Ex. if j=2 then 1 << 2 = 4
+                int length = (1 << j);
 
-                int length = mask + 1;
+                int mask = length - 1;
                 int[] count = new int[length];
 
-                for (int i = start; i < end; i++) {
+                for (int i = start; i < end; i++)
                     count[array[i] >>> shift & mask]++;
-                }
+
 
                 countList[id] = count;
-                digPointer = new int[count.length];
-                digPointList[id] = digPointer;
+                digitPointer = new int[count.length];
+                digitPointList[id] = digitPointer;
 
                 sync(cb2);
 
@@ -123,7 +193,7 @@ public class ParallelRadixSort {
                 int sum = 0;
                 for (int i = 0; i < count.length; i++) {
                     for (int k = 0; k < countList.length; k++) {
-                        digPointList[k][i] = sum;
+                        digitPointList[k][i] = sum;
                         sum += countList[k][i];
                     }
                 }
@@ -131,7 +201,7 @@ public class ParallelRadixSort {
 
                 // Move numbers form a[] to b[]
                 for (int idx = start; idx < end; idx++) {
-                    int m = digPointer[(array[idx] >>> shift) & mask]++;
+                    int m = digitPointer[(array[idx] >>> shift) & mask]++;
                     arrayCopy[m] = array[idx];
                 }
 

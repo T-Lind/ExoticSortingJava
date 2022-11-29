@@ -1,6 +1,6 @@
 package counting_sort;
 
-public class Sort {
+public class RunSort {
     public static void main(String[] args) {
         ParallelizedCountingSort.hideSort();
     }

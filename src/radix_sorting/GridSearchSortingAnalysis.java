@@ -44,7 +44,7 @@ public class GridSearchSortingAnalysis {
         var fileWriter = new BufferedWriter(fstream);
 
         // Label the processor statistics the new file
-        UtilOperations.writeMachineStatistics(fileWriter);
+        Util.writeMachineStatistics(fileWriter);
 
         // Store data pertaining to the average, min, st. dev of the current run and threads/bits used to achieve it
         double[] data = {Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, 0, 0};
@@ -97,7 +97,7 @@ public class GridSearchSortingAnalysis {
 
         // Run N_TRIALS of the sorting algorithm, averaging and finding the min to write to the file and print to the screen
         for (int i = 0; i < N_TRIALS; i++) {
-            UtilOperations.randomizeArray(array, Integer.MAX_VALUE - 1);
+            Util.randomizeArray(array, Integer.MAX_VALUE - 1);
             // Instantiate the sorting algorithm. Creates some int variables but nothing too large, sorting runs on .radixSort()
             var sorting = new ParallelRadixSort(array, nThreads, useBits, N_ITEMS);
 

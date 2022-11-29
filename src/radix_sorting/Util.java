@@ -2,12 +2,13 @@ package radix_sorting;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Various common utility functions used throughout sorting programs
  */
-public class UtilOperations {
+public class Util {
     /**
      * Used for calculating machine statistics
      */
@@ -124,5 +125,28 @@ public class UtilOperations {
             return true;
         System.out.println("Number of mis-sorts: " + nIncorrect);
         return false;
+    }
+
+    public static int min(short... values) {
+        int min = values[0];
+        for (int i = 1; i < values.length; i++)
+            if (values[i] < min)
+                min = values[i];
+        return min;
+    }
+
+    public static double avg(short... values) {
+        int sum = 0;
+        for (short item : values)
+            sum += item;
+        return sum / (double) values.length;
+    }
+
+    public static double standardDeviation(short... values) {
+        double summation = 0;
+        double mean = avg(values);
+        for(short item : values)
+            summation += (item - mean)*(item - mean);
+        return Math.sqrt(summation/(values.length));
     }
 }

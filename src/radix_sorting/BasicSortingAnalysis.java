@@ -7,7 +7,7 @@ import java.io.IOException;
 public class BasicSortingAnalysis {
     private static final int N_ITEMS = 1_000_000;
     private static final short N_TRIALS = 10;
-    private static final short N_THREADS = 4;
+    private static final short N_THREADS = 12;
     private static final short USE_BITS = 6;
 
     /*
@@ -26,19 +26,18 @@ public class BasicSortingAnalysis {
 
         HOME COMPUTER (SLOWER):
         ------
-        BEST TIME 1M: 14ms
-        BEST TIME 10M: 120ms
-
-        USE 8 THREADS 10M
-        USE 8 THREADS 1M
-        USE BITS = 6
+        BEST TIME 1M: 6ms (14 THREADS, 6 BITS)
+        BEST TIME 10M: 115ms (10 THREADS, 6 BITS)
     */
 
     public static void main(String[] args) throws IOException {
         var times = new short[N_TRIALS];
         var array = new int[N_ITEMS];
 
-        var fstream = new FileWriter("C:\\Users\\zenith\\IdeaProjects\\Sorting\\src\\radix_sorting\\data\\run_" + System.currentTimeMillis() + ".txt");
+        // Home computer filepath
+//        var fstream = new FileWriter("C:\\Users\\zenith\\IdeaProjects\\Sorting\\src\\radix_sorting\\data\\run_" + System.currentTimeMillis() + ".txt");
+        // School laptop filepath
+        var fstream = new FileWriter("Z:\\My Drive\\ComputerScience\\IdeaProjects\\ExoticSortingJava\\src\\radix_sorting\\data\\run_"+System.currentTimeMillis()+".txt");
         var fileWriter = new BufferedWriter(fstream);
 
         // Label the processor statistics in a new file that's created with the name as the current time in milliseconds

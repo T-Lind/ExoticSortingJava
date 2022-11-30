@@ -16,7 +16,7 @@ public class ParallelRadixSort {
      * Arrays containing the sorting data
      */
     private final int[] array;
-    private final int[] arrayCopy;
+    private int[] arrayCopy;
 
     /**
      * Lists containing the count
@@ -52,8 +52,6 @@ public class ParallelRadixSort {
         this.array = array;
         this.N_THREADS = N_THREADS;
         this.USE_BITS = USE_BITS;
-        arrayCopy = new int[N_ITEMS];
-
 
         cb1 = new CyclicBarrier(N_THREADS + 1);
         cb2 = new CyclicBarrier(N_THREADS);
@@ -65,6 +63,7 @@ public class ParallelRadixSort {
         threads = new Thread[REMAINDER + (N_THREADS - REMAINDER)];
 
         countList = new int[N_THREADS][];
+        arrayCopy = new int[array.length];
         digitPointList = new int[N_THREADS][];
 
         initVariables();

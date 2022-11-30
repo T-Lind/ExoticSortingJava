@@ -1,0 +1,15 @@
+Machine statistics:
+Max memory: 15360MB, Available processors: 4
+
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3495ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3130ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3039ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3040ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3018ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3023ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3049ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3087ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3067ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 10 Time: 3075ms
+Minimum time of 3018.0ms, average time of: 3102.3ms, st. dev: 134.65886528558005Test results:
+Test passed completely!

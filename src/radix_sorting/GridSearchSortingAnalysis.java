@@ -5,17 +5,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class GridSearchSortingAnalysis {
-    private static final int N_ITEMS = 10_000_000;
+    private static final int N_ITEMS = 1_000_000_000;
 
     /**
      * Number of trials used when analyzing a config of bits used and threads used
      */
-    private static final char N_TRIALS = 10;
+    private static final char N_TRIALS = 5;
 
 
     // Bounds of specifications that will be analyzed, inclusive on both ends
-    private static final char MIN_N_THREADS = 5, MAX_N_THREADS = 14;
-    private static final char MIN_USE_BITS = 4, MAX_USE_BITS = 10;
+    private static final char MIN_N_THREADS = 9, MAX_N_THREADS = 16;
+    private static final char MIN_USE_BITS = 7, MAX_USE_BITS = 10;
 
     /*
         RECORD DATA:
@@ -40,7 +40,9 @@ public class GridSearchSortingAnalysis {
     public static void main(String[] args) throws IOException {
 
         // Create a new file labeled with the time since the epoch in ms
-        var fstream = new FileWriter("C:\\Users\\zenith\\IdeaProjects\\Sorting\\src\\radix_sorting\\data\\gridsearch_run_" + System.currentTimeMillis() + ".txt");
+//        var fstream = new FileWriter("C:\\Users\\zenith\\IdeaProjects\\Sorting\\src\\radix_sorting\\data\\gridsearch_run_" + System.currentTimeMillis() + ".txt");
+        var fstream = new FileWriter("C:\\Users\\lindauer_927142\\IdeaProjects\\ExoticSortingJava\\src\\radix_sorting\\data\\run_" + System.currentTimeMillis() + ".txt");
+
         var fileWriter = new BufferedWriter(fstream);
 
         // Label the processor statistics the new file
@@ -99,10 +101,10 @@ public class GridSearchSortingAnalysis {
         for (int i = 0; i < N_TRIALS; i++) {
             Util.randomizeArray(array, Integer.MAX_VALUE - 1);
             // Instantiate the sorting algorithm. Creates some int variables but nothing too large, sorting runs on .radixSort()
-            var sorting = new ParallelRadixSort(array, nThreads, useBits, N_ITEMS);
 
             // Run the sorting algorithm
             var before = System.currentTimeMillis();
+            var sorting = new ParallelRadixSort(array, nThreads, useBits, N_ITEMS);
             sorting.radixSort();
             var after = System.currentTimeMillis();
 

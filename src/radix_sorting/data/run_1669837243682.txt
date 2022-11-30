@@ -1,0 +1,30 @@
+Machine statistics:
+Max memory: 15360MB, Available processors: 4
+
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3493ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3059ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3013ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3041ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3009ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3042ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3048ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3009ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3038ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3007ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3014ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3040ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3015ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3019ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3050ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3024ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3023ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 2997ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3024ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3032ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3071ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3016ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3028ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3023ms
+Items sorted: 1000000000 Threads: 12 Bits: 10 Trials: 25 Time: 3034ms
+Minimum time of 2997.0ms, average time of: 3046.76ms, st. dev: 92.69359416917655Test results:
+Test passed completely!

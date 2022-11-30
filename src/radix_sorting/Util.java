@@ -3,6 +3,7 @@ package radix_sorting;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -15,8 +16,9 @@ public class Util {
     private static final int MB = 1024 * 1024;
 
     static void randomizeArray(int[] input, int MAX_NUM) {
+        var rand = new Random(99);
         for (int i = 0; i < input.length; i++)
-            input[i] = ThreadLocalRandom.current().nextInt(0, MAX_NUM);
+            input[i] = rand.nextInt(0, MAX_NUM);
     }
 
     /**

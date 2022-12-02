@@ -7,13 +7,13 @@
 This repository contains multiple different approaches to beating `Arrays.ParallelSort()` on a sort of 1B items with non-negative 32 bit integers.
 
 The submission provided is present in the `radix_sorting` folder, in which the most optimized version is in `radix_sort/SingularSortingAnalysis.java`.
-It sorts these 1B items in ~2.6s on average.
+It sorts these 1B items in ~2.9s on average.
 This optimized approach was achieved through `radix_sorting/GridSearchSortingAnalysis.java` that tests every combination of threads and bits used within the specified ranges.
 
 #### Prior Art:
 
 This `radix_sorting` is based on the code from <https://github.com/sverrbb/parallel-radix-sort/blob/main/Main.java>, however significant improvements have been made.
-The average time this code takes to execute is ~3.6s, while this code takes only ~2.6s for 1B items.
+The average time this code takes to execute is ~3.6s, while this code takes only ~2.9s for 1B items.
 This significant improvement in time is due to the numerous method calls that have been reduced and whose functions have been placed in-line with the rest of the code.
 Much of the member data of each class has also been reduced, and consigned to individual methods.
 Beyond that, the grid-search algorithm is vital in optimizing the time, because it can determine the absolute minimum of time possible with this algorithm.

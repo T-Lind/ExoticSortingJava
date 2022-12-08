@@ -10,6 +10,15 @@ The submission provided is present in the `radix_sorting` folder, in which the m
 It sorts these 1B items in ~2.9s on average.
 This optimized approach was achieved through `radix_sorting/GridSearchSortingAnalysis.java` that tests every combination of threads and bits used within the specified ranges.
 
+#### Parallel Radix Sort:
+A parallel radix sort is a variant of the radix sort algorithm that is designed to take advantage of multiple processors or cores in a computer system to improve the performance and speed of the sorting process. This is achieved by dividing the list of numbers to be sorted into smaller sub-lists, and then sorting each sub-list in parallel using multiple processors or cores.
+
+The basic steps involved in a parallel radix sort are similar to those of a regular radix sort, but they are applied to each sub-list in parallel. Each sub-list would then be sorted independently using the radix sort algorithm, starting from the least significant digit and moving towards the most significant digit.
+
+Once all of the sub-lists have been sorted, they are concatenated to form the final, sorted list of numbers.
+
+The key advantage of a parallel radix sort is that it can take advantage of multiple processors or cores to sort the numbers more quickly and efficiently than a regular radix sort. This can be particularly useful for sorting large lists of numbers, or for sorting numbers that have a large number of digits. However, the performance improvements of a parallel radix sort will depend on the specific hardware and software being used, as well as the size and structure of the list of numbers being sorted.
+
 #### Prior Art:
 
 This `radix_sorting` is based on the code from <https://github.com/sverrbb/parallel-radix-sort/blob/main/Main.java>, however significant improvements have been made.

@@ -21,6 +21,12 @@ public class Util {
             input[i] = rand.nextInt(0, MAX_NUM);
     }
 
+    static void randomizeArray(int[] input, int MAX_NUM, int seed) {
+        var rand = new Random(seed);
+        for (int i = 0; i < input.length; i++)
+            input[i] = rand.nextInt(0, MAX_NUM);
+    }
+
     /**
      * Write memory available to use and processors to use on this machine,
      * gives context to the run data and helps differentiate the best runs

@@ -1,13 +1,14 @@
 package radix_sorting;
 
 import jdk.incubator.vector.IntVector;
+import jdk.incubator.vector.VectorSpecies;
 
 import java.util.concurrent.CyclicBarrier;
 
 /**
  * Hyper-optimized class to sort a static array in parallel through a radix sort
  */
-public class ParallelRadixSort {
+public class ParallelRadixSortVectorAPI {
 
     /**
      * Variables containing various constants used throughout the sort
@@ -41,6 +42,8 @@ public class ParallelRadixSort {
      */
     private int start;
 
+    private static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_PREFERRED;
+
 
 
     /**
@@ -51,7 +54,7 @@ public class ParallelRadixSort {
      * @param USE_BITS  number of bits to initially sort by (excess goes to remainder)
      * @param N_ITEMS   number of items to sort to remove array.length call
      */
-    public ParallelRadixSort(int[] array, int N_THREADS, int USE_BITS, int N_ITEMS) {
+    public ParallelRadixSortVectorAPI(int[] array, int N_THREADS, int USE_BITS, int N_ITEMS) {
         this.array = array;
         this.N_THREADS = N_THREADS;
         this.USE_BITS = USE_BITS;
@@ -69,20 +72,7 @@ public class ParallelRadixSort {
         arrayCopy = new int[array.length];
         digitPointList = new int[N_THREADS][];
 
-        char idx = 0;
-        for (int i = 0; i < REMAINDER; i++) {
-            int end = start + SIZE_OF_SEGMENT + 1;
-            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
-            start += SIZE_OF_SEGMENT + 1;
-            idx++;
-        }
-
-        for (int j = REMAINDER; j < N_THREADS; j++) {
-            int end = start + SIZE_OF_SEGMENT;
-            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
-            start += SIZE_OF_SEGMENT;
-            idx++;
-        }
+        initVariables();
     }
 
 
@@ -123,6 +113,9 @@ public class ParallelRadixSort {
          */
         private int[] array, arrayCopy, digitPointer;
 
+        private int upperBound;
+
+
         /**
          * Constructs the worker class on thread initialization
          *
@@ -150,17 +143,21 @@ public class ParallelRadixSort {
          * 3. Move numbers form array[] to arrayCopy[]
          */
         public void run() {
+
+
             // Establish the maximum value used in the array
             int maxValue = Integer.MAX_VALUE - 1;
 
             // How bit shift operator works: takes binary number and moves the number
             // second argument left. >> does the reverse, but still uses the second arg.
-            // Finds length of number
             int maxBits = 0;
             while (maxValue >= 1L << maxBits) maxBits += 1;
 
             // Determine the number of digits to analyze
             int digits = Math.max(1, maxBits / USE_BITS);
+            upperBound = SPECIES.loopBound(digits);
+
+
             int[] digitLen = new int[digits];
 
             // Splits the number into two parts
@@ -178,9 +175,10 @@ public class ParallelRadixSort {
 
             int shift = 0;
 
-            for (int j : digitLen) {
+            var j = 0;
+            for (; j < upperBound; j += SPECIES.length()){
                 // Ex. if j=2 then 1 << 2 = 4
-                int length = (1 << j);
+                int length = (1 << digitLen[j]);
 
                 int mask = length - 1;
                 int[] count = new int[length];
@@ -216,11 +214,28 @@ public class ParallelRadixSort {
                 var temp = array;
                 array = arrayCopy;
                 arrayCopy = temp;
-                shift += j;
+                shift += digitLen[j];
             }
 
             System.arraycopy(array, start, arrayCopy, start, end - start);
             sync(cb1);
+        }
+    }
+
+    private void initVariables() {
+        char idx = 0;
+        for (int i = 0; i < REMAINDER; i++) {
+            int end = start + SIZE_OF_SEGMENT + 1;
+            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT + 1;
+            idx++;
+        }
+
+        for (int j = REMAINDER; j < N_THREADS; j++) {
+            int end = start + SIZE_OF_SEGMENT;
+            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT;
+            idx++;
         }
     }
 }

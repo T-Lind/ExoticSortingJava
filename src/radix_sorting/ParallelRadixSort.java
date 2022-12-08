@@ -66,7 +66,20 @@ public class ParallelRadixSort {
         arrayCopy = new int[array.length];
         digitPointList = new int[N_THREADS][];
 
-        initVariables();
+        char idx = 0;
+        for (int i = 0; i < REMAINDER; i++) {
+            int end = start + SIZE_OF_SEGMENT + 1;
+            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT + 1;
+            idx++;
+        }
+
+        for (int j = REMAINDER; j < N_THREADS; j++) {
+            int end = start + SIZE_OF_SEGMENT;
+            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
+            start += SIZE_OF_SEGMENT;
+            idx++;
+        }
     }
 
 
@@ -139,6 +152,7 @@ public class ParallelRadixSort {
 
             // How bit shift operator works: takes binary number and moves the number
             // second argument left. >> does the reverse, but still uses the second arg.
+            // Finds length of number
             int maxBits = 0;
             while (maxValue >= 1L << maxBits) maxBits += 1;
 
@@ -204,23 +218,6 @@ public class ParallelRadixSort {
 
             System.arraycopy(array, start, arrayCopy, start, end - start);
             sync(cb1);
-        }
-    }
-
-    private void initVariables() {
-        char idx = 0;
-        for (int i = 0; i < REMAINDER; i++) {
-            int end = start + SIZE_OF_SEGMENT + 1;
-            threads[idx] = new Thread(new Worker(i, array, arrayCopy, start, end));
-            start += SIZE_OF_SEGMENT + 1;
-            idx++;
-        }
-
-        for (int j = REMAINDER; j < N_THREADS; j++) {
-            int end = start + SIZE_OF_SEGMENT;
-            threads[idx] = new Thread(new Worker(j, array, arrayCopy, start, end));
-            start += SIZE_OF_SEGMENT;
-            idx++;
         }
     }
 }

@@ -119,6 +119,12 @@ public class GridSearchSortingAnalysis {
         Various helper functions to calculate the min, avg, and st. dev from an array of shorts
      */
 
+    /**
+     * This method returns the minimum value in an array of shorts.
+     *
+     * @param values The array of short values
+     * @return The minimum value in the array
+     */
     private static int min(short... values) {
         int min = values[0];
         for (int i = 1; i < values.length; i++)
@@ -127,6 +133,12 @@ public class GridSearchSortingAnalysis {
         return min;
     }
 
+    /**
+     * This method calculates the average of an array of short values.
+     *
+     * @param values The array of short values
+     * @return The average value in the array
+     */
     private static double avg(short... values) {
         int sum = 0;
         for (short item : values)
@@ -134,6 +146,12 @@ public class GridSearchSortingAnalysis {
         return sum / (double) values.length;
     }
 
+    /**
+     * This method calculates the standard deviation of an array of short values.
+     *
+     * @param values The array of short values
+     * @return The standard deviation of the values in the array
+     */
     private static double standardDeviation(short... values) {
         double summation = 0;
         double mean = avg(values);

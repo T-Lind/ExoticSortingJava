@@ -2,12 +2,22 @@ package counting_sort;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This class implements a default counting sort algorithm.
+ * It sorts an integer array in ascending order, and includes a
+ * helper method to check if the array is sorted.
+ */
 public class DefaultCountingSort {
     private static int N_ITEMS = 100_000_000;
 
     private static int MAX_VAL = 2_000_000_000;
 
-
+    /**
+     * This method checks if an array is sorted in ascending order.
+     *
+     * @param array The array to check
+     * @return A boolean indicating whether the array is sorted or not
+     */
     static boolean isSorted(int[] array){
         int prev = 0;
         for(int item: array)
@@ -18,6 +28,13 @@ public class DefaultCountingSort {
         return true;
     }
 
+    /**
+     * This method sorts an array using a counting sort algorithm.
+     *
+     * @param array The array to sort
+     * @param output The array to store the sorted elements in
+     * @param count An auxiliary array used for counting
+     */
     static void countSort(int[] array, int[] output, int[] count) {
         int i;
         for (i = 1; i <= N_ITEMS; i++)
@@ -32,6 +49,14 @@ public class DefaultCountingSort {
         }
     }
 
+    /**
+     * The main method initializes an array with random integer values,
+     * sorts it using the `countSort` method, measures the time it took
+     * to sort the array, and prints the result and whether the array
+     * is sorted or not.
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         var array = new int[N_ITEMS + 1];
         var output = new int[N_ITEMS + 1];

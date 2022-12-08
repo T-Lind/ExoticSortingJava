@@ -129,6 +129,12 @@ public class Util {
         return false;
     }
 
+    /**
+     * This method returns the minimum value in an array of shorts.
+     *
+     * @param values The array of short values
+     * @return The minimum value in the array
+     */
     public static int min(short... values) {
         int min = values[0];
         for (int i = 1; i < values.length; i++)
@@ -137,6 +143,12 @@ public class Util {
         return min;
     }
 
+    /**
+     * This method calculates the average of an array of short values.
+     *
+     * @param values The array of short values
+     * @return The average value in the array
+     */
     public static double avg(short... values) {
         int sum = 0;
         for (short item : values)
@@ -144,11 +156,17 @@ public class Util {
         return sum / (double) values.length;
     }
 
+    /**
+     * This method calculates the standard deviation of an array of short values.
+     *
+     * @param values The array of short values
+     * @return The standard deviation of the values in the array
+     */
     public static double standardDeviation(short... values) {
         double summation = 0;
         double mean = avg(values);
-        for(short item : values)
-            summation += (item - mean)*(item - mean);
-        return Math.sqrt(summation/(values.length));
+        for (short item : values)
+            summation += (item - mean) * (item - mean);
+        return Math.sqrt(summation / (values.length));
     }
 }
